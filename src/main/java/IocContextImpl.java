@@ -45,7 +45,7 @@ public class IocContextImpl implements IocContext {
             throw new IllegalStateException("the class has not been registered.");
         }
 
-         forbidRegister = true;
+        forbidRegister = true;
 
         try {
             return resolveClazz.newInstance();
