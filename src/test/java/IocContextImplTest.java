@@ -1,6 +1,8 @@
 import beans.AbstractBean;
+import beans.ExceptionBean;
 import beans.NoDefaultBean;
 import beans.MyBean;
+import exceptions.MyException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -51,13 +53,11 @@ class IocContextImplTest {
         assertEquals("the class has not been registered.",exception.getMessage());
     }
 
-
     @Test
-    void can_be_created_if_conditions_is_satisfied() {
-        IocContext context = new IocContextImpl();
-        context.registerBean(MyBean.class);
-        MyBean myBeanInstance = context.getBean(MyBean.class);
+    void should_catch_the_exception_if_resolveClass_throws_an_exception() {
+        context.registerBean(ExceptionBean.class);
 
-        assertEquals(MyBean.class,myBeanInstance.getClass());
+        Throwable exception = assertThrows(MyException.class, () -> context.getBean(ExceptionBean.class));
+        assertEquals("the constructor throws an exception.",exception.getMessage());
     }
 }

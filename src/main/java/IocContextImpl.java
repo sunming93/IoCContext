@@ -1,3 +1,5 @@
+import exceptions.MyException;
+
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +31,7 @@ public class IocContextImpl implements IocContext {
     }
 
     @Override
-    public <T> T getBean(Class<T> resolveClazz) {
+    public <T> T getBean(Class<T> resolveClazz) throws Exception {
         if(resolveClazz == null){
             throw new IllegalArgumentException("resolveClass is null.");
         }
@@ -38,6 +40,6 @@ public class IocContextImpl implements IocContext {
             throw new IllegalStateException("the class has not been registered.");
         }
 
-        return null;
+        return resolveClazz.newInstance();
     }
 }
