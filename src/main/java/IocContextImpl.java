@@ -8,6 +8,14 @@ public class IocContextImpl implements IocContext {
 
     @Override
     public <T> T getBean(Class<T> resolveClazz) {
-        return clazz.newInstance();
+        if(resolveClazz == null){
+            throw new IllegalArgumentException("beanClazz is mandatory.");
+        }
+
+        try {
+            return resolveClazz.newInstance();
+        }catch (Exception e){
+            throw new IllegalArgumentException(resolveClazz.getName()+" is abstract.");
+        }
     }
 }
