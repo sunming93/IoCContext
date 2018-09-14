@@ -40,6 +40,13 @@ class IocContextImplTest {
     }
 
     @Test
+    void should_throw_exception_if_resolveClazz_is_null() {
+        Throwable exception = assertThrows(IllegalArgumentException.class, () -> context.getBean(null));
+        assertEquals("resolveClass is null.",exception.getMessage());
+    }
+
+
+    @Test
     void can_be_created_if_conditions_is_satisfied() {
         IocContext context = new IocContextImpl();
         context.registerBean(MyBean.class);

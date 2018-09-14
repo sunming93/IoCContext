@@ -30,6 +30,10 @@ public class IocContextImpl implements IocContext {
 
     @Override
     public <T> T getBean(Class<T> resolveClazz) {
+        if(resolveClazz == null){
+            throw new IllegalArgumentException("resolveClass is null.");
+        }
+
         return null;
     }
 }
