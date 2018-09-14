@@ -94,7 +94,7 @@ class IocContextImplTest {
         MyBean oneInstance = context.getBean(MyBean.class);
         MyBean anotherInstance = context.getBean(MyBean.class);
 
-        assertNotEquals(oneInstance,anotherInstance);
+        assertNotSame(oneInstance,anotherInstance);
     }
 
 }
