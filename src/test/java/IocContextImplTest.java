@@ -1,6 +1,7 @@
 import beans.InvalidBean;
 import beans.MyBean;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -10,7 +11,8 @@ class IocContextImplTest {
         IocContext context = new IocContextImpl();
         context.registerBean(MyBean.class);
 
-        assertThrows(IllegalArgumentException.class,() -> context.getBean(null),"beanClazz is mandatory.");
+        Throwable exception = assertThrows(IllegalArgumentException.class, () -> context.getBean(null));
+        assertEquals("beanClazz is mandatory.",exception.getMessage());
     }
 
     @Test
@@ -18,7 +20,8 @@ class IocContextImplTest {
         IocContext context = new IocContextImpl();
         context.registerBean(MyBean.class);
 
-        assertThrows(IllegalArgumentException.class,() -> context.getBean(InvalidBean.class),"beanClazz is mandatory.");
+        Throwable exception = assertThrows(IllegalArgumentException.class, () -> context.getBean(InvalidBean.class));
+        assertEquals("beans.InvalidBean is abstract.",exception.getMessage());
     }
 
     @Test
