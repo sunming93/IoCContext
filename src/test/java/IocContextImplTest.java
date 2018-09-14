@@ -34,7 +34,7 @@ class IocContextImplTest {
     }
 
     @Test
-    void should_return_directly_if_beanClazz_has_bean_registered() {
+    void should_return_directly_if_beanClazz_has_been_registered() {
         context.registerBean(MyBean.class);
         context.registerBean(MyBean.class);
     }
@@ -43,6 +43,12 @@ class IocContextImplTest {
     void should_throw_exception_if_resolveClazz_is_null() {
         Throwable exception = assertThrows(IllegalArgumentException.class, () -> context.getBean(null));
         assertEquals("resolveClass is null.",exception.getMessage());
+    }
+
+    @Test
+    void should_throw_exception_if_resolveClazz_has_not_been_registered() {
+        Throwable exception = assertThrows(IllegalStateException.class, () -> context.getBean(MyBean.class));
+        assertEquals("the class has not been registered.",exception.getMessage());
     }
 
 

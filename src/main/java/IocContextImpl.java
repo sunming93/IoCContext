@@ -34,6 +34,10 @@ public class IocContextImpl implements IocContext {
             throw new IllegalArgumentException("resolveClass is null.");
         }
 
+        if (!clazz.contains(resolveClazz)){
+            throw new IllegalStateException("the class has not been registered.");
+        }
+
         return null;
     }
 }
