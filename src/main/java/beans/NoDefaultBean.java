@@ -1,9 +1,9 @@
 package beans;
 
-public class InvalidBean {
+public class NoDefaultBean {
     private int number;
 
-    public InvalidBean(int number) {
+    public NoDefaultBean(int number) {
         this.number = number;
     }
 }

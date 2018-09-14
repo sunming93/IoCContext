@@ -1,27 +1,42 @@
-import beans.InvalidBean;
+import beans.AbstractBean;
+import beans.NoDefaultBean;
 import beans.MyBean;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class IocContextImplTest {
+    private IocContext context;
+
+    @BeforeEach
+    void setUp() {
+        context = new IocContextImpl();
+    }
+
     @Test
     void should_throw_exception_when_create_instance_for_null() {
-        IocContext context = new IocContextImpl();
-        context.registerBean(MyBean.class);
-
-        Throwable exception = assertThrows(IllegalArgumentException.class, () -> context.getBean(null));
+        Throwable exception = assertThrows(IllegalArgumentException.class, () -> context.registerBean(null));
         assertEquals("beanClazz is mandatory.",exception.getMessage());
     }
 
     @Test
     void should_throw_exception_if_instance_cannot_be_created() {
-        IocContext context = new IocContextImpl();
-        context.registerBean(MyBean.class);
+        Throwable exception = assertThrows(IllegalArgumentException.class, () -> context.registerBean(AbstractBean.class));
+        assertEquals("beans.AbstractBean is abstract.",exception.getMessage());
+    }
 
-        Throwable exception = assertThrows(IllegalArgumentException.class, () -> context.getBean(InvalidBean.class));
-        assertEquals("beans.InvalidBean is abstract.",exception.getMessage());
+
+    @Test
+    void should_throw_exception_if_register_a_class_without_default_constructor() {
+        Throwable exception = assertThrows(IllegalArgumentException.class, () -> context.registerBean(NoDefaultBean.class));
+        assertEquals("beans.NoDefaultBean has no default constructor.",exception.getMessage());
+    }
+
+    @Test
+    void should_return_directly_if_beanClazz_has_bean_registered() {
+        context.registerBean(MyBean.class);
+        context.registerBean(MyBean.class);
     }
 
     @Test
