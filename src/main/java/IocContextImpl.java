@@ -6,9 +6,14 @@ import java.util.List;
 
 public class IocContextImpl implements IocContext {
     private List<Class> clazz = new ArrayList<>();
+    private boolean forbidRegister;
 
     @Override
     public void registerBean(Class<?> beanClazz) {
+        if(forbidRegister){
+            throw new IllegalStateException("cannot be registered.");
+        }
+
         if(beanClazz == null){
             throw new IllegalArgumentException("beanClazz is mandatory.");
         }
@@ -31,7 +36,7 @@ public class IocContextImpl implements IocContext {
     }
 
     @Override
-    public <T> T getBean(Class<T> resolveClazz) throws Exception {
+    public <T> T getBean(Class<T> resolveClazz) throws MyException {
         if(resolveClazz == null){
             throw new IllegalArgumentException("resolveClass is null.");
         }
@@ -40,6 +45,15 @@ public class IocContextImpl implements IocContext {
             throw new IllegalStateException("the class has not been registered.");
         }
 
-        return resolveClazz.newInstance();
+         forbidRegister = true;
+
+        try {
+            return resolveClazz.newInstance();
+        }catch (InstantiationException e){
+            e.printStackTrace();
+        }catch (IllegalAccessException e){
+            e.printStackTrace();
+        }
+        return null;
     }
 }

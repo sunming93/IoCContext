@@ -1,7 +1,4 @@
-import beans.AbstractBean;
-import beans.ExceptionBean;
-import beans.NoDefaultBean;
-import beans.MyBean;
+import beans.*;
 import exceptions.MyException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -59,5 +56,14 @@ class IocContextImplTest {
 
         Throwable exception = assertThrows(MyException.class, () -> context.getBean(ExceptionBean.class));
         assertEquals("the constructor throws an exception.",exception.getMessage());
+    }
+
+    @Test
+    void cannot_be_registered_if_getBean() throws MyException{
+        context.registerBean(MyBean.class);
+        context.getBean(MyBean.class);
+
+        Throwable exception = assertThrows(IllegalStateException.class, () -> context.registerBean(AnotherBean.class));
+        assertEquals("cannot be registered.",exception.getMessage());
     }
 }
