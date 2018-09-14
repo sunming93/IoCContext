@@ -35,7 +35,7 @@ class IocContextImplTest {
     @Test
     void should_return_directly_if_beanClazz_has_been_registered() {
         context.registerBean(MyBean.class);
-        context.registerBean(MyBean.class);
+        assertAll(() -> context.registerBean(MyBean.class));
     }
 
     @Test
@@ -68,6 +68,29 @@ class IocContextImplTest {
     }
 
     @Test
+    void can_be_get_if_registered() throws MyException{
+        context.registerBean(MyBean.class);
+
+        assertAll(() -> context.getBean(MyBean.class));
+    }
+
+    @Test
+    void can_be_get_if_registered_two_times() throws MyException{
+        context.registerBean(MyBean.class);
+        MyBean oneInstance = context.getBean(MyBean.class);
+
+        assertAll(() -> context.getBean(MyBean.class));
+    }
+
+    @Test
+    void can_be_get_if_registered_two_class() throws MyException{
+        context.registerBean(MyBean.class);
+        context.registerBean(AnotherBean.class);
+
+        assertAll(() -> context.getBean(MyBean.class));
+    }
+
+    @Test
     void should_get_different_instance_if_get_two_times() throws MyException{
         context.registerBean(MyBean.class);
 
@@ -76,6 +99,5 @@ class IocContextImplTest {
 
         assertNotEquals(oneInstance,anotherInstance);
     }
-
 
 }
