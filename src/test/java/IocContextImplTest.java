@@ -66,4 +66,16 @@ class IocContextImplTest {
         Throwable exception = assertThrows(IllegalStateException.class, () -> context.registerBean(AnotherBean.class));
         assertEquals("cannot be registered.",exception.getMessage());
     }
+
+    @Test
+    void should_get_different_instance_if_get_two_times() throws MyException{
+        context.registerBean(MyBean.class);
+
+        MyBean oneInstance = context.getBean(MyBean.class);
+        MyBean anotherInstance = context.getBean(MyBean.class);
+
+        assertNotEquals(oneInstance,anotherInstance);
+    }
+
+
 }
