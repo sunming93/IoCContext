@@ -170,4 +170,23 @@ class IocContextImplTest {
         assertEquals(myBean.getClass().getSuperclass(),MyBeanBase.class);
         assertEquals(myBean.getClass().getInterfaces()[0],MyBeanInterface.class);
     }
+
+    @Test
+    void should_create_an_instance_and_dependency_and_assign_to_field() throws MyException{
+        context.registerBean(MyBeanWithDependency.class);
+        context.registerBean(MyDependency.class);
+
+        MyBeanWithDependency myBeanWithDependency = context.getBean(MyBeanWithDependency.class);
+
+        assertNull(myBeanWithDependency.getMyDependency());
+    }
+
+    @Test
+    void should_throw_an_exception_if_dependency_has_not_been_registered() {
+        context.registerBean(MyBeanWithDependency.class);
+
+        Throwable exception = assertThrows(IllegalStateException.class,
+                () -> context.getBean(MyBeanWithDependency.class));
+        assertEquals("beans.MyDependency has not been registered.",exception.getMessage());
+    }
 }
