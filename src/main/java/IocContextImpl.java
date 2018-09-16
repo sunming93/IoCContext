@@ -133,8 +133,12 @@ public class IocContextImpl implements IocContext {
             Object currentInstance = resolvedClazzes.get(i);
 
             if(currentInstance instanceof AutoCloseable){
-                ((AutoCloseable)currentInstance).close();
-                closeMethods.add(currentInstance.getClass().getName());
+                try {
+                    ((AutoCloseable)currentInstance).close();
+                    closeMethods.add(currentInstance.getClass().getName());
+                }finally {
+                    continue;
+                }
             }
         }
     }
