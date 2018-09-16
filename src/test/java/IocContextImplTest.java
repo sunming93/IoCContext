@@ -178,7 +178,7 @@ class IocContextImplTest {
 
         MyBeanWithDependency myBeanWithDependency = context.getBean(MyBeanWithDependency.class);
 
-        assertNull(myBeanWithDependency.getMyDependency());
+        assertNotNull(myBeanWithDependency.getMyDependency());
     }
 
     @Test

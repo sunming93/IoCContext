@@ -1,5 +1,8 @@
+import beans.CreateOnTheFly;
 import exceptions.MyException;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,14 +32,52 @@ public class IocContextImpl implements IocContext {
 
         forbidRegister = true;
 
+        T newInstance = null;
+
         try {
-            return (T)clazz.get(resolveClazz).newInstance();
+            newInstance = (T) clazz.get(resolveClazz).newInstance();
         }catch (InstantiationException e){
             e.printStackTrace();
         }catch (IllegalAccessException e){
             e.printStackTrace();
         }
-        return null;
+
+        Field[] fields = resolveClazz.getDeclaredFields();
+
+        for(Field field : fields){
+            Annotation[] annotations = field.getAnnotations();
+
+            for(Annotation annotation : annotations){
+                if(annotation.annotationType() == CreateOnTheFly.class){
+                    Object fieldInstance = null;
+                    Class<?> type = field.getType();
+                    if(clazz.get(type) == null){
+                        throw new IllegalStateException("beans.MyDependency has not been registered.");
+                    }else {
+                        try {
+                            fieldInstance = type.newInstance();
+                        }catch (InstantiationException e){
+                            e.printStackTrace();
+                        }catch (IllegalAccessException e){
+                            e.printStackTrace();
+                        }
+                    }
+
+                    try {
+                        Field newField = newInstance.getClass().getDeclaredField(field.getName());
+
+                        newField.setAccessible(true);
+                        newField.set(newInstance,fieldInstance);
+                        newField.setAccessible(false);
+                    }catch (NoSuchFieldException e){
+                        e.printStackTrace();
+                    }catch (IllegalAccessException e){
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return newInstance;
     }
 
     @Override
