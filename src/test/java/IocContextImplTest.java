@@ -104,4 +104,21 @@ class IocContextImplTest {
         assertNotSame(oneInstance,anotherInstance);
     }
 
+    @Test
+    void should_create_an_instance_of_the_super_class() throws MyException{
+        context.registerBean(MyBeanBase.class, MyBean.class);
+
+        MyBeanBase myBeanBase = context.getBean(MyBeanBase.class);
+
+        assertEquals(myBeanBase.getClass(),MyBean.class);
+    }
+
+    @Test
+    void should_create_an_instance_of_the_interface() throws MyException{
+        context.registerBean(MyBeanInterface.class, MyBean.class);
+
+        MyBeanInterface myBeanInterface = context.getBean(MyBeanInterface.class);
+
+        assertEquals(myBeanInterface.getClass(),MyBean.class);
+    }
 }
