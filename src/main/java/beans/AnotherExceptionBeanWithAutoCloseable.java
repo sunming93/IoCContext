@@ -2,7 +2,7 @@ package beans;
 
 import exceptions.MyException;
 
-public class AnotherExcepyionBeanWithAutoCloseable implements AutoCloseable{
+public class AnotherExceptionBeanWithAutoCloseable implements AutoCloseable{
 
     @Override
     public void close() throws Exception {

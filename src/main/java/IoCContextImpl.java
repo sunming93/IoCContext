@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class IocContextImpl implements IocContext {
+public class IoCContextImpl implements IoCContext {
     private Map<Class, Class> clazz = new HashMap<>();
     private boolean forbidRegister;
 
@@ -141,17 +141,27 @@ public class IocContextImpl implements IocContext {
 
     @Override
     public void close() throws Exception {
+        Exception firstException = null;
         for (int i = resolvedClazzes.size()-1; i >=0 ; i--) {
             Object currentInstance = resolvedClazzes.get(i);
 
             if(currentInstance instanceof AutoCloseable){
                 try {
                     ((AutoCloseable)currentInstance).close();
+                }catch (Exception e){
+                    if(firstException == null){
+                        firstException = e;
+                    }
+                }
+                finally {
                     closeMethods.add(currentInstance.getClass().getName());
-                }finally {
                     continue;
                 }
             }
+        }
+
+        if(firstException != null){
+            throw firstException;
         }
     }
 }
