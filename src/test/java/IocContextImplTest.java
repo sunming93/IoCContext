@@ -105,7 +105,7 @@ class IocContextImplTest {
     }
 
     @Test
-    void should_create_an_instance_of_the_super_class() throws MyException{
+    void should_create_an_instance_of_the_son_class_if_get_by_the_super_class() throws MyException{
         context.registerBean(MyBeanBase.class, MyBean.class);
 
         MyBeanBase myBeanBase = context.getBean(MyBeanBase.class);
@@ -114,10 +114,28 @@ class IocContextImplTest {
     }
 
     @Test
-    void should_create_an_instance_of_the_interface() throws MyException{
+    void should_create_an_instance_of_the_son_class_if_get_by_the_son_class() throws MyException{
+        context.registerBean(MyBeanBase.class, MyBean.class);
+
+        MyBeanBase myBeanBase = context.getBean(MyBean.class);
+
+        assertEquals(myBeanBase.getClass(), MyBean.class);
+    }
+
+    @Test
+    void should_create_an_instance_of_the_implement_class_if_get_by_the_interface() throws MyException{
         context.registerBean(MyBeanInterface.class, MyBean.class);
 
         MyBeanInterface myBeanInterface = context.getBean(MyBeanInterface.class);
+
+        assertEquals(myBeanInterface.getClass(), MyBean.class);
+    }
+
+    @Test
+    void should_create_an_instance_of_the_implement_class_if_get_by_the_implement_class() throws MyException{
+        context.registerBean(MyBeanInterface.class, MyBean.class);
+
+        MyBeanInterface myBeanInterface = context.getBean(MyBean.class);
 
         assertEquals(myBeanInterface.getClass(), MyBean.class);
     }
@@ -130,5 +148,26 @@ class IocContextImplTest {
         MyBeanBase myBeanBase = context.getBean(MyBeanBase.class);
 
         assertEquals(myBeanBase.getClass(),MyBeanCooler.class);
+    }
+
+    @Test
+    void should_cover_the_previous_registered_type2() throws MyException{
+        context.registerBean(MyBeanBase.class, MyBeanCooler.class);
+        context.registerBean(MyBeanBase.class, MyBean.class);
+
+        MyBeanBase myBeanBase = context.getBean(MyBeanBase.class);
+
+        assertEquals(myBeanBase.getClass(),MyBean.class);
+    }
+
+    @Test
+    void should_an_instance_extends_the_super_class_and_implements_the_interface() throws MyException{
+        context.registerBean(MyBeanBase.class, MyBean.class);
+        context.registerBean(MyBeanInterface.class, MyBean.class);
+
+        MyBean myBean = context.getBean(MyBean.class);
+
+        assertEquals(myBean.getClass().getSuperclass(),MyBeanBase.class);
+        assertEquals(myBean.getClass().getInterfaces()[0],MyBeanInterface.class);
     }
 }

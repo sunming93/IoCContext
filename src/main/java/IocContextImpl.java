@@ -17,7 +17,6 @@ public class IocContextImpl implements IocContext {
         registerBean(beanClazz, beanClazz);
     }
 
-
     @Override
     public <T> T getBean(Class<T> resolveClazz) throws MyException {
         if(resolveClazz == null){
@@ -65,5 +64,6 @@ public class IocContextImpl implements IocContext {
         }
 
         clazz.put(resolveClazz, beanClazz);
+        clazz.put(beanClazz, beanClazz);
     }
 }
