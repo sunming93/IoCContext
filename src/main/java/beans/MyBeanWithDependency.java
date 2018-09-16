@@ -17,4 +17,8 @@ public class MyBeanWithDependency {
         this.myDependency = myDependency;
         logger.add("Mydependency in the myBean");
     }
+
+    public List<String> getLogger() {
+        return logger;
+    }
 }
