@@ -192,15 +192,14 @@ class IocContextImplTest {
 
     @Test
     void should_create_the_field_from_super_class_to_son_class() throws MyException{
-        context.registerBean(MyBeanWithDependency.class);
+        context.registerBean(MyBeanSonWithDependency.class);
         context.registerBean(MyDependency.class);
 
-        MyBeanWithDependency myBeanWithDependency = context.getBean(MyBeanWithDependency.class);
+        context.getBean(MyBeanSonWithDependency.class);
 
-        assertArrayEquals(new String[]{"ClosableWithException.close","ClosableWithoutException.close"},
-                myBeanWithDependency.getLogger().toArray());
+        assertArrayEquals(new String[]{"ClassName:beans.MyBeanWithDependency,MethodName:myDependency",
+                        "ClassName:beans.MyBeanSonWithDependency,MethodName:myDependencyInTheSon"},
+                IocContext.fieldInitializations.toArray());
     }
-
-
 
 }

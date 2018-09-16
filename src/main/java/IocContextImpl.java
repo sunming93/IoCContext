@@ -4,7 +4,9 @@ import exceptions.MyException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class IocContextImpl implements IocContext {
@@ -42,42 +44,56 @@ public class IocContextImpl implements IocContext {
             e.printStackTrace();
         }
 
-        Field[] fields = resolveClazz.getDeclaredFields();
+        List<Class> inheritances = new ArrayList<>();
+        Class currentClass = resolveClazz;
+        inheritances.add(currentClass);
+        while ((currentClass = currentClass.getSuperclass()) != null){
+            inheritances.add(currentClass);
+        }
 
-        for(Field field : fields){
-            Annotation[] annotations = field.getAnnotations();
+        for (int i = inheritances.size()-2; i >= 0 ; i--) {
+            Class tempClass = inheritances.get(i);
+            Field[] fields = tempClass.getDeclaredFields();
 
-            for(Annotation annotation : annotations){
-                if(annotation.annotationType() == CreateOnTheFly.class){
-                    Object fieldInstance = null;
-                    Class<?> type = field.getType();
-                    if(clazz.get(type) == null){
-                        throw new IllegalStateException("beans.MyDependency has not been registered.");
-                    }else {
-                        try {
-                            fieldInstance = type.newInstance();
-                        }catch (InstantiationException e){
-                            e.printStackTrace();
-                        }catch (IllegalAccessException e){
-                            e.printStackTrace();
+            for(Field field : fields){
+                Annotation[] annotations = field.getAnnotations();
+
+                for(Annotation annotation : annotations){
+                    if(annotation.annotationType() == CreateOnTheFly.class){
+                        Object fieldInstance = null;
+                        Class<?> type = field.getType();
+                        if(clazz.get(type) == null){
+                            throw new IllegalStateException("beans.MyDependency has not been registered.");
+                        }else {
+                            try {
+                                fieldInstance = type.newInstance();
+                                fieldInitializations.add("ClassName:"+tempClass.getName()+",MethodName:"+field.getName());
+                            }catch (InstantiationException e){
+                                e.printStackTrace();
+                            }catch (IllegalAccessException e){
+                                e.printStackTrace();
+                            }
                         }
-                    }
 
-                    try {
-                        Field newField = newInstance.getClass().getDeclaredField(field.getName());
+                        if(i == 0){
+                            try {
+                                Field newField = newInstance.getClass().getDeclaredField(field.getName());
 
-                        newField.setAccessible(true);
-                        newField.set(newInstance,fieldInstance);
-                        newField.setAccessible(false);
+                                newField.setAccessible(true);
+                                newField.set(newInstance, fieldInstance);
+                                newField.setAccessible(false);
 
-                    }catch (NoSuchFieldException e){
-                        e.printStackTrace();
-                    }catch (IllegalAccessException e){
-                        e.printStackTrace();
+                            } catch (NoSuchFieldException e) {
+                                e.printStackTrace();
+                            } catch (IllegalAccessException e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
                 }
             }
         }
+
         return newInstance;
     }
 
@@ -107,5 +123,10 @@ public class IocContextImpl implements IocContext {
 
         clazz.put(resolveClazz, beanClazz);
         clazz.put(beanClazz, beanClazz);
+    }
+
+    @Override
+    public void close() throws Exception {
+
     }
 }
