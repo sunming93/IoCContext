@@ -12,6 +12,7 @@ import java.util.Map;
 public class IocContextImpl implements IocContext {
     private Map<Class, Class> clazz = new HashMap<>();
     private boolean forbidRegister;
+    private List<Object> resolvedClazzes = new ArrayList<>();
 
     @Override
     public void registerBean(Class<?> beanClazz) {
@@ -67,7 +68,7 @@ public class IocContextImpl implements IocContext {
                         }else {
                             try {
                                 fieldInstance = type.newInstance();
-                                fieldInitializations.add("ClassName:"+tempClass.getName()+",MethodName:"+field.getName());
+                                fieldInitializations.add("ClassName: "+tempClass.getName()+", MethodName: "+field.getName());
                             }catch (InstantiationException e){
                                 e.printStackTrace();
                             }catch (IllegalAccessException e){
@@ -94,6 +95,7 @@ public class IocContextImpl implements IocContext {
             }
         }
 
+        resolvedClazzes.add(newInstance);
         return newInstance;
     }
 
@@ -127,6 +129,13 @@ public class IocContextImpl implements IocContext {
 
     @Override
     public void close() throws Exception {
+        for (int i = resolvedClazzes.size()-1; i >=0 ; i--) {
+            Object currentInstance = resolvedClazzes.get(i);
 
+            if(currentInstance instanceof AutoCloseable){
+                ((AutoCloseable)currentInstance).close();
+                closeMethods.add(currentInstance.getClass().getName());
+            }
+        }
     }
 }

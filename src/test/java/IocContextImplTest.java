@@ -197,8 +197,8 @@ class IocContextImplTest {
 
         context.getBean(MyBeanSonWithDependency.class);
 
-        assertArrayEquals(new String[]{"ClassName:beans.MyBeanWithDependency,MethodName:myDependency",
-                        "ClassName:beans.MyBeanSonWithDependency,MethodName:myDependencyInTheSon"},
+        assertArrayEquals(new String[]{"ClassName: beans.MyBeanWithDependency, MethodName: myDependency",
+                        "ClassName: beans.MyBeanSonWithDependency, MethodName: myDependencyInTheSon"},
                 IocContext.fieldInitializations.toArray());
     }
 
@@ -209,9 +209,21 @@ class IocContextImplTest {
 
         context.getBean(MyBeanGrandsonWithDependency.class);
 
-        assertArrayEquals(new String[]{"ClassName:beans.MyBeanWithDependency,MethodName:myDependency",
-                        "ClassName:beans.MyBeanSonWithDependency,MethodName:myDependencyInTheSon",
-                        "ClassName:beans.MyBeanGrandsonWithDependency,MethodName:myDependencyInTheGrandson"},
+        assertArrayEquals(new String[]{"ClassName: beans.MyBeanWithDependency, MethodName: myDependency",
+                        "ClassName: beans.MyBeanSonWithDependency, MethodName: myDependencyInTheSon",
+                        "ClassName: beans.MyBeanGrandsonWithDependency, MethodName: myDependencyInTheGrandson"},
                 IocContext.fieldInitializations.toArray());
     }
+
+    @Test
+    void should_call_the_close_of_beanClass_when_IoCContext_call_the_close() throws Exception{
+        context.registerBean(MyBeanWithAutoCloseable.class);
+
+        context.getBean(MyBeanWithAutoCloseable.class);
+        context.close();
+
+        assertArrayEquals(new String[]{"beans.MyBeanWithAutoCloseable"},
+                IocContext.closeMethods.toArray());
+    }
+
 }
