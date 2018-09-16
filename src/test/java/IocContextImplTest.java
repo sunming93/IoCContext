@@ -238,4 +238,25 @@ class IocContextImplTest {
         assertArrayEquals(new String[]{"beans.AnotherBeanWithAutoCloseable","beans.MyBeanWithAutoCloseable"},
                 IocContext.closeMethods.toArray());
     }
+
+    @Test
+    void should_finish_all_the_call_and_throw_the_first_exception_if_the_fist_throw_an_exception() throws Exception {
+        context.registerBean(ExceptionBeanWithAutoCloseable.class);
+        context.registerBean(AnotherBeanWithAutoCloseable.class);
+
+        context.getBean(ExceptionBeanWithAutoCloseable.class);
+        context.getBean(AnotherBeanWithAutoCloseable.class);
+
+        try {
+            context.close();
+        }catch (Throwable exception){
+            assertSame(exception.getClass(), MyException.class);
+            assertEquals("ExceptionBeanWithAutoCloseable throws an exception in the close.", exception.getMessage());
+
+            assertArrayEquals(new String[]{"beans.AnotherBeanWithAutoCloseable","beans.ExceptionBeanWithAutoCloseable"},
+                    IocContext.closeMethods.toArray());
+        }
+    }
+
+
 }
