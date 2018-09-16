@@ -10,8 +10,13 @@ public class IocContextImpl implements IocContext {
 
     @Override
     public void registerBean(Class<?> beanClazz) {
-//        registerBean(beanClazz, beanClazz);
+        registerBeanHelper(beanClazz);
     }
+
+    public <T> void registerBeanHelper(Class<T> beanClazz){
+        registerBean(beanClazz, beanClazz);
+    }
+
 
     @Override
     public <T> T getBean(Class<T> resolveClazz) throws MyException {
