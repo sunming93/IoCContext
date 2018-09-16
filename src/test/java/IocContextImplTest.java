@@ -189,4 +189,17 @@ class IocContextImplTest {
                 () -> context.getBean(MyBeanWithDependency.class));
         assertEquals("beans.MyDependency has not been registered.",exception.getMessage());
     }
+
+//    @Test
+//    void should_create_the_field_from_super_class_to_son_class() throws MyException{
+//        context.registerBean(MyBeanWithDependency.class);
+//        context.registerBean(MyDependency.class);
+//
+//        MyBeanWithDependency myBeanWithDependency = context.getBean(MyBeanWithDependency.class);
+//
+//        assertIterableEquals({"ClosableWithException.close","ClosableWithoutException.close"},
+//                myBeanWithDependency.logger);
+//    }
+
+
 }
