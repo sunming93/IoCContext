@@ -199,7 +199,7 @@ class IocContextImplTest {
 
         assertArrayEquals(new String[]{"ClassName: beans.MyBeanWithDependency, MethodName: myDependency",
                         "ClassName: beans.MyBeanSonWithDependency, MethodName: myDependencyInTheSon"},
-                IocContext.fieldInitializations.toArray());
+                ((IocContextImpl)context).getFieldInitializations().toArray());
     }
 
     @Test
@@ -212,7 +212,7 @@ class IocContextImplTest {
         assertArrayEquals(new String[]{"ClassName: beans.MyBeanWithDependency, MethodName: myDependency",
                         "ClassName: beans.MyBeanSonWithDependency, MethodName: myDependencyInTheSon",
                         "ClassName: beans.MyBeanGrandsonWithDependency, MethodName: myDependencyInTheGrandson"},
-                IocContext.fieldInitializations.toArray());
+                ((IocContextImpl)context).getFieldInitializations().toArray());
     }
 
     @Test
@@ -223,7 +223,7 @@ class IocContextImplTest {
         context.close();
 
         assertArrayEquals(new String[]{"beans.MyBeanWithAutoCloseable"},
-                IocContext.closeMethods.toArray());
+                ((IocContextImpl)context).getCloseMethods().toArray());
     }
 
     @Test
@@ -236,7 +236,7 @@ class IocContextImplTest {
         context.close();
 
         assertArrayEquals(new String[]{"beans.AnotherBeanWithAutoCloseable","beans.MyBeanWithAutoCloseable"},
-                IocContext.closeMethods.toArray());
+                ((IocContextImpl)context).getCloseMethods().toArray());
     }
 
     @Test
@@ -254,7 +254,7 @@ class IocContextImplTest {
             assertEquals("ExceptionBeanWithAutoCloseable throws an exception in the close.", exception.getMessage());
 
             assertArrayEquals(new String[]{"beans.AnotherBeanWithAutoCloseable","beans.ExceptionBeanWithAutoCloseable"},
-                    IocContext.closeMethods.toArray());
+                    ((IocContextImpl)context).getCloseMethods().toArray());
         }
     }
 
@@ -273,7 +273,7 @@ class IocContextImplTest {
             assertEquals("AnotherExceptionBeanWithAutoCloseable throws an exception in the close.", exception.getMessage());
 
             assertArrayEquals(new String[]{"beans.AnotherExceptionBeanWithAutoCloseable","beans.ExceptionBeanWithAutoCloseable"},
-                    IocContext.closeMethods.toArray());
+                    ((IocContextImpl)context).getCloseMethods().toArray());
         }
     }
 }

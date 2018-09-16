@@ -12,7 +12,19 @@ import java.util.Map;
 public class IocContextImpl implements IocContext {
     private Map<Class, Class> clazz = new HashMap<>();
     private boolean forbidRegister;
+
+    private List<String> fieldInitializations = new ArrayList<>();
+    private List<String> closeMethods = new ArrayList<>();
+
     private List<Object> resolvedClazzes = new ArrayList<>();
+
+    public List<String> getFieldInitializations() {
+        return fieldInitializations;
+    }
+
+    public List<String> getCloseMethods() {
+        return closeMethods;
+    }
 
     @Override
     public void registerBean(Class<?> beanClazz) {
