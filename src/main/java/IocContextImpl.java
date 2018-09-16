@@ -59,6 +59,5 @@ public class IocContextImpl implements IocContext {
 
     @Override
     public <T> void registerBean(Class<? super T> resolveClazz, Class<T> beanClazz) {
-
     }
 }

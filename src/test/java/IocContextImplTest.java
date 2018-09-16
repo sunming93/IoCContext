@@ -15,20 +15,23 @@ class IocContextImplTest {
 
     @Test
     void should_throw_exception_when_create_instance_for_null() {
-        Throwable exception = assertThrows(IllegalArgumentException.class, () -> context.registerBean(null));
+        Throwable exception = assertThrows(IllegalArgumentException.class,
+                () -> context.registerBean(null));
         assertEquals("beanClazz is mandatory.",exception.getMessage());
     }
 
     @Test
     void should_throw_exception_if_instance_cannot_be_created() {
-        Throwable exception = assertThrows(IllegalArgumentException.class, () -> context.registerBean(AbstractBean.class));
+        Throwable exception = assertThrows(IllegalArgumentException.class,
+                () -> context.registerBean(AbstractBean.class));
         assertEquals("beans.AbstractBean is abstract.",exception.getMessage());
     }
 
 
     @Test
     void should_throw_exception_if_register_a_class_without_default_constructor() {
-        Throwable exception = assertThrows(IllegalArgumentException.class, () -> context.registerBean(NoDefaultBean.class));
+        Throwable exception = assertThrows(IllegalArgumentException.class,
+                () -> context.registerBean(NoDefaultBean.class));
         assertEquals("beans.NoDefaultBean has no default constructor.",exception.getMessage());
     }
 
@@ -40,13 +43,15 @@ class IocContextImplTest {
 
     @Test
     void should_throw_exception_if_resolveClazz_is_null() {
-        Throwable exception = assertThrows(IllegalArgumentException.class, () -> context.getBean(null));
+        Throwable exception = assertThrows(IllegalArgumentException.class,
+                () -> context.getBean(null));
         assertEquals("resolveClass is null.",exception.getMessage());
     }
 
     @Test
     void should_throw_exception_if_resolveClazz_has_not_been_registered() {
-        Throwable exception = assertThrows(IllegalStateException.class, () -> context.getBean(MyBean.class));
+        Throwable exception = assertThrows(IllegalStateException.class,
+                () -> context.getBean(MyBean.class));
         assertEquals("the class has not been registered.",exception.getMessage());
     }
 
@@ -54,7 +59,8 @@ class IocContextImplTest {
     void should_catch_the_exception_if_resolveClass_throws_an_exception() {
         context.registerBean(ExceptionBean.class);
 
-        Throwable exception = assertThrows(MyException.class, () -> context.getBean(ExceptionBean.class));
+        Throwable exception = assertThrows(MyException.class,
+                () -> context.getBean(ExceptionBean.class));
         assertEquals("the constructor throws an exception.",exception.getMessage());
     }
 
@@ -63,7 +69,8 @@ class IocContextImplTest {
         context.registerBean(MyBean.class);
         context.getBean(MyBean.class);
 
-        Throwable exception = assertThrows(IllegalStateException.class, () -> context.registerBean(AnotherBean.class));
+        Throwable exception = assertThrows(IllegalStateException.class,
+                () -> context.registerBean(AnotherBean.class));
         assertEquals("cannot be registered.",exception.getMessage());
     }
 

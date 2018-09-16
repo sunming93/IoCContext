@@ -1,4 +1,4 @@
 package beans;
 
-public class MyBean {
+public class MyBean extends MyBeanBase{
 }
