@@ -110,7 +110,7 @@ class IocContextImplTest {
 
         MyBeanBase myBeanBase = context.getBean(MyBeanBase.class);
 
-        assertEquals(myBeanBase.getClass(),MyBean.class);
+        assertEquals(myBeanBase.getClass(), MyBean.class);
     }
 
     @Test
@@ -119,6 +119,16 @@ class IocContextImplTest {
 
         MyBeanInterface myBeanInterface = context.getBean(MyBeanInterface.class);
 
-        assertEquals(myBeanInterface.getClass(),MyBean.class);
+        assertEquals(myBeanInterface.getClass(), MyBean.class);
+    }
+
+    @Test
+    void should_cover_the_previous_registered_type() throws MyException{
+        context.registerBean(MyBeanBase.class, MyBean.class);
+        context.registerBean(MyBeanBase.class, MyBeanCooler.class);
+
+        MyBeanBase myBeanBase = context.getBean(MyBeanBase.class);
+
+        assertEquals(myBeanBase.getClass(),MyBeanCooler.class);
     }
 }
