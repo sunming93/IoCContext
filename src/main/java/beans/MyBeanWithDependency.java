@@ -1,8 +1,10 @@
 package beans;
 
-import com.sun.istack.internal.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MyBeanWithDependency {
+    List<String> logger = new ArrayList<>();
 
     @CreateOnTheFly
     private MyDependency myDependency;
@@ -13,5 +15,6 @@ public class MyBeanWithDependency {
 
     public void setMyDependency(MyDependency myDependency) {
         this.myDependency = myDependency;
+        logger.add("Mydependency in the myBean");
     }
 }

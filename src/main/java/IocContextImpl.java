@@ -69,6 +69,7 @@ public class IocContextImpl implements IocContext {
                         newField.setAccessible(true);
                         newField.set(newInstance,fieldInstance);
                         newField.setAccessible(false);
+
                     }catch (NoSuchFieldException e){
                         e.printStackTrace();
                     }catch (IllegalAccessException e){
