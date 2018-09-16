@@ -202,4 +202,16 @@ class IocContextImplTest {
                 IocContext.fieldInitializations.toArray());
     }
 
+    @Test
+    void should_create_the_field_from_super_class_to_son_class_to_grandSon_class() throws MyException {
+        context.registerBean(MyBeanGrandsonWithDependency.class);
+        context.registerBean(MyDependency.class);
+
+        context.getBean(MyBeanGrandsonWithDependency.class);
+
+        assertArrayEquals(new String[]{"ClassName:beans.MyBeanWithDependency,MethodName:myDependency",
+                        "ClassName:beans.MyBeanSonWithDependency,MethodName:myDependencyInTheSon",
+                        "ClassName:beans.MyBeanGrandsonWithDependency,MethodName:myDependencyInTheGrandson"},
+                IocContext.fieldInitializations.toArray());
+    }
 }
