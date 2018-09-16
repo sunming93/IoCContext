@@ -258,5 +258,22 @@ class IocContextImplTest {
         }
     }
 
+    @Test
+    void should_throw_the_first_exception_if_the_both_close_throws_an_exception() throws Exception {
+        context.registerBean(ExceptionBeanWithAutoCloseable.class);
+        context.registerBean(AnotherExcepyionBeanWithAutoCloseable.class);
 
+        context.getBean(ExceptionBeanWithAutoCloseable.class);
+        context.getBean(AnotherExcepyionBeanWithAutoCloseable.class);
+
+        try {
+            context.close();
+        }catch (IllegalStateException exception){
+            assertSame(exception.getClass(), MyException.class);
+            assertEquals("AnotherExceptionBeanWithAutoCloseable throws an exception in the close.", exception.getMessage());
+
+            assertArrayEquals(new String[]{"beans.AnotherExceptionBeanWithAutoCloseable","beans.ExceptionBeanWithAutoCloseable"},
+                    IocContext.closeMethods.toArray());
+        }
+    }
 }
